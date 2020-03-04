@@ -1,0 +1,405 @@
+Work:
+
+1. Pack all the python scripts in a single folder(GUI.py, diagnostics.py,script.py) and make it to start as a daemon
+and should be able to stop and start any script at anytime
+
+2. Run a script that should listen for feature updates and config updates
+Eg.,[commands]
+	cmd1 = "ls"
+	cmd2 = "who"
+ *Change the parameter of cmd1
+ *Add a new command 'cmd3'
+ *Remove a command
+ *Update the existing script, e.g. GUI.py to new GUI_1.py
+ 
+3. GUI_pgm and diagnosticspgm will have both feature update and config update
+while NTP pgm will have only config update.
+ 
+4.Whenever new config change is received for a program(module),
+stop the corresponding module, update the config or feature change
+and then restart it with a new script, no as daemon.
+
+5. Have as many switch cases for each feature update handling, config parameter update, new parameter addition,etc
+ 
+6. The information sent should be as small as possible.
+
+7. Sometimes it necessary to update the script.py itself
+
+8. Encryption should be done on everything
+
+9. Feature update.py and config update.py should be running
+
+Feature update.py hadle new feature updates(GUI.py, diag.py update the files) and config update.py 
+
+Config update handles config value changes for GUI_config values, diag_config values, etc.
+
+Both have multiple switch cases to show
+
+
+https://www.instructables.com/id/Raspberry-Pi-Launch-Python-script-on-startup/
+
+1. Note: Another way you can use crontab is to execute scripts at specific times, such as every minute, every hour, at a specific time. 
+
+2. But if you're really going to go this route, I'd probably add them in /etc/rc.local if you're on a Linux system, but run them as background processes. For example:
+
+python /path/to/script1.py &
+python /path/to/script2.py &
+
+and hopefully they'll keep running. Your mileage may vary.
+
+3. If you want your scripts to run in parallel and without any assumption of concurrency issues, then in a file named script.bash, you would write
+
+python scriptone.py & disown
+python scripttwo.py & disown
+python scriptthree.py & disown
+
+4. #!/bin/bash
+
+path=”/home/Documents/”
+
+p1=”python_script1.py”
+
+p2=”python_script2.py”
+
+sudo Python3 $path/$p1
+
+sudo Python3 $path/$p2
+
+Save this code then in your terminal in the directory of file script.sh
+
+Give permission to execute it
+
+chmod +x script.sh
+
+Then test that script
+
+$ sh script.sh
+
+5. Run a python script, whill will launch multiple py scripts and detach the control from the main script-on-startup/
+(can't run using this, current pgm doesnot exits unil the calling pgm exit)
+
+
+6. rc.local method is not working
+
+To kill a python module(program):
+Method1:
+ ps -ef | grep python | awk '{print $2 , $9}'
+ will lists the process ids and python program names
+ parse it to match with the required pid and kill the process
+ using "sudo kill -9 pid"
+ 
+Method2: 
+ *find the process id of the py script using
+  "pgrep -f json_diagnostics_framework.py"
+  then kill it  (or)
+ *Use "pkill -9 -f json_diagnostics_framework.py"
+  to directly kill it
+  
+  
+ 7. import os, signal
+
+def check_kill_process(pstring):
+    for line in os.popen("ps ax | grep " + pstring + " | grep -v grep"):
+        fields = line.split()
+        pid = fields[0]
+        os.kill(int(pid), signal.SIGKILL)
+		
+		
+8. Use it for passing command line parameters to shell script 
+import subprocess
+import shlex
+subprocess.call(shlex.split('./test.sh param1 param2'))
+ 
+ 
+ 
+Error: "top: failed tty " get on executing python program as startup script
+(top -n 1) without -b
+
+
+
+9. Tested when a pgm is running, it is loaded into ram,
+on deleting the same pgm during running, it won't get affected.
+
+10.
+https://stackoverflow.com/questions/25675352/how-to-check-to-see-if-a-folder-contains-files-using-python-3/25675420
+try:
+    os.rmdir( submodule_absolute_path )
+    is_empty = True
+
+except OSError:
+    is_empty = False
+	
+https://stackoverflow.com/questions/1603109/how-to-make-a-python-script-run-like-a-service-or-daemon-in-linux
+http://blog.scphillips.com/posts/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/
+
+11.
+
+You should use the python-daemon library, it takes care of everything.
+
+12. 
+You can also make the python script run as a service using a shell script. 
+First create a shell script to run the python script like this (scriptname arbitary name)
+
+#!/bin/sh
+script='/home/.. full path to script'
+/usr/bin/python $script &
+
+now make a file in /etc/init.d/scriptname
+
+#! /bin/sh
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+DAEMON=/home/.. path to shell script scriptname created to run python script
+PIDFILE=/var/run/scriptname.pid
+
+test -x $DAEMON || exit 0
+
+. /lib/lsb/init-functions
+
+case "$1" in
+  start)
+     log_daemon_msg "Starting feedparser"
+     start_daemon -p $PIDFILE $DAEMON
+     log_end_msg $?
+   ;;
+  stop)
+     log_daemon_msg "Stopping feedparser"
+     killproc -p $PIDFILE $DAEMON
+     PID=`ps x |grep feed | head -1 | awk '{print $1}'`
+     kill -9 $PID       
+     log_end_msg $?
+   ;;
+  force-reload|restart)
+     $0 stop
+     $0 start
+   ;;
+  status)
+     status_of_proc -p $PIDFILE $DAEMON atd && exit 0 || exit $?
+   ;;
+ *)
+   echo "Usage: /etc/init.d/atd {start|stop|restart|force-reload|status}"
+   exit 1
+  ;;
+esac
+
+exit 0
+Now you can start and stop your python script using the command /etc/init.d/scriptname start or stop.
+
+13.
+
+If you find a situation where you truly need a daemon (a process that never stops running), 
+take a look at supervisord. It provides a simple way to wrapper a normal, non-daemonized script or program and make it operate like a daemon. 
+This is a much better way than creating a native Python daemon.
+
+
+14.
+
+pip install daemonize
+and then use like:
+
+...
+import os, sys
+from daemonize import Daemonize
+...
+def main()
+      # your code here
+
+if __name__ == '__main__':
+        myname=os.path.basename(sys.argv[0])
+        pidfile='/tmp/%s' % myname       # any name
+        daemon = Daemonize(app=myname,pid=pidfile, action=main)
+        daemon.start()
+		
+		
+15. Use whatever service manager your system offers - for example under Ubuntu use upstart. 
+This will handle all the details for you such as start on boot, restart on crash, etc.
+
+16. & at the end of a script means , it runs in the background
+
+17. http://blog.scphillips.com/posts/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/
+http://devopspy.com/linux/python-script-linux-systemd-service/
+
+
+18. custom packages
+ https://nullprogram.com/blog/2018/03/27/
+https://docs.unity3d.com/Manual/CustomPackages.html
+
+
+19. sudo find /home/mahesh/ -name "config.py"
+
+20. Yes, you can watch a directory via the inotify system using inotifywait or inotifywatch from the inotify-tools.
+
+21. To delete a file,
+import os
+if os.path.exists("demofile.txt"):
+  os.remove("demofile.txt")
+else:
+  print("The file does not exist")
+  
+22.Remove the folder "myfolder":
+
+import os
+os.rmdir("myfolder")
+
+23. To walk through directories, folders and files,
+https://www.pythonlearn.com/html-008/cfbook017.html
+
+24. Craeting a service in raspberri pi,
+https://www.raspberrypi.org/documentation/linux/usage/systemd.md
+
+25. BIOS looks in to MBR and loads a small program which knows where GRUB is located 
+then this small program loads GRUB and eventually GRUB loads a kernel.
+
+
+26.https://dzone.com/articles/start-a-service-using-debian-package-on-raspberry
+
+27. Download a newer .deb and install it just like you installed the previous one.
+
+No, you cannot get automatic updates as part of the normal apt update && apt upgrade process; that's what repositories are for.
+
+28. https://pi.gate.ac.uk/pages/package.html
+How to create a deb package
+https://www.youtube.com/watch?v=ep88vVfzDAo
+
+learn how to tweak the deb file : video
+
+29.https://askubuntu.com/questions/458748/is-it-possible-to-add-a-location-folder-on-my-hard-disk-to-sources-list
+
+30.sed command (FIND and REPLACE across a list of files
+sed is extremely powerful, and we recommend that you back up your files and test your sed commands thoroughly before running them. Here is a very simple sed one-liner, intended to illustrate its syntax:
+
+sed -i `s/^good/BAD/` morning-star.txt
+This replaces occurrences of the word “good” at the beginning of a line (noted by the ^) with the string “BAD” in the file morning-star.txt. The option -i tells sed to perform the replacements “in place.” The sed command can make backups of the files it edits if you specify a suffix after the -i option, as in -iBAK. In the above command this option would save the original file as morning-star.txt.BAK before making changes.
+
+The general format of a sed statement is:
+
+'s/[regex]/[replacement]/'
+
+
+
+31. Text editors
+nano /etc/hosts
+vi /etc/hosts
+emacs /etc/hosts
+zile /etc/hosts
+
+
+32. https://www.linode.com/docs/troubleshooting/troubleshooting-memory-and-networking-issues/
+MySQL Low-Memory Settings
+
+ You can use the following snippet to see a list of your running processes sorted by memory use:
+
+ps -eo pmem,pcpu,rss,vsize,args | sort -k 1 -r | less
+
+34. What is init?
+In Linux, init is a abbreviation for Initialization. The init is a daemon process which starts as soon as the computer starts 
+and continue running till, it is shutdown. In-fact init is the first process that starts when a computer boots, 
+making it the parent of all other running processes directly or indirectly and hence typically it is assigned “pid=1“.
+
+What is systemd ?
+Similar to init, systemd is the parent of all other processes directly or indirectly and 
+is the first process that starts at boot hence typically assigned a “pid=1“.
+
+A systemd, may refer to all the packages, utilities and libraries around daemon. 
+It was designed to overcome the shortcomings of init. 
+It itself is a background processes which is designed to start processes in parallel, 
+thus reducing the boot time and computational overhead. 
+It has a lot other features as compared to init.
+
+Why there was a need to replace init?
+A init process starts serially i.e., one task starts only after the last task startup was successful 
+and it was loaded in the memory. This often resulted into delayed and long booting time. 
+However, systemd was not designed for speed but for 
+getting the things done neatly which in turns avoid all the UN-necessary delay.
+
+
+33.
+def download_figshare(file_name, file_ext, dir_path='./', change_name = None):
+    prepare_data_dir(dir_path)
+    url = 'https://ndownloader.figshare.com/files/' + file_name
+    wget.download(url, out=dir_path)
+    file_path = os.path.join(dir_path, file_name)
+
+    if file_ext == '.zip':
+        zip_ref = zipfile.ZipFile(file_path,'r')
+        if change_name is not None:
+            dir_path = os.path.join(dir_path, change_name)
+        zip_ref.extractall(dir_path)
+        zip_ref.close()
+        os.remove(file_path)
+    elif file_ext == '.tar.bz2':
+        tar_ref = tarfile.open(file_path,'r:bz2')
+        if change_name is not None:
+            dir_path = os.path.join(dir_path, change_name)
+        tar_ref.extractall(dir_path)
+        tar_ref.close()
+        os.remove(file_path)
+    elif change_name is not None:
+        os.rename(file_path, os.path.join(dir_path, change_name))
+
+
+34. 
+p = subprocess.Popen(list[cmd], stdout=subprocess.PIPE, shell=True)
+     (output, err) = p.communicate()
+#     print(output)
+
+35. zip -r tecmint_files.zip tecmint_files
+    unzip tecmint_files.zip
+	
+36. If you are downloading a heavy file, you may want to add the -c or --continue flag, which means continue getting a partially-downloaded file. 
+With it, you don’t have to start the download afresh.
+
+This option helps you to resume downloading a file started by a previous instance of wget, or by another program or one that you had paused. 
+It is also useful in case of any network failure. For example,
+
+$ wget -c https://tenet.dl.sourceforge.net/project/parrotsecurity/iso/4.1/Parrot-security-4.1_amd64.iso
+
+37.  pip3 install zipfile37
+
+38. https://www.2daygeek.com/linux-remove-delete-lines-in-file-sed-command/
+sed - stream editor
+
+    To delete or remove specific lines which matches with given pattern.
+    To remove a particular line from the file.
+    To delete expressions as well from a file, which can be identified by a specifying delimiter (such as a comma, tab, or space).
+
+
+39. TRY this to create dest. if not exists
+try:
+    shutil.copy(src_fpath, dest_fpath)
+except IOError as io_err:
+    os.makedirs(os.path.dirname(dest_fpath))
+    shutil.copy(src_fpath, dest_fpath)
+
+40.
+    destination_filepath='./mahesh/next/new/11/12/main15.zip'
+    dirname=os.path.dirname(destination_filepath))
+    dirname, filename= os.path.split(destination_filepath)
+
+
+42. 
+
+Here's how you read a file, and then write to it (overwriting any existing data), without closing and reopening:
+
+with open(filename, "r+") as f:
+    data = f.read()
+    f.seek(0)
+    f.write(output)
+    f.truncate()
+
+44.rpi- startup script methods
+https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all
+
+
+43. rc-local -> startup script execution run by root, if mkdir is used, it is root owned
+https://www.raspberrypi.org/documentation/linux/usage/rc-local.md
+
+44. logrotate-to-maximum-file-size-for-all-logs
+https://stackoverflow.com/questions/20162176/centos-linux-setting-logrotate-to-maximum-file-size-for-all-logs
+
+45. ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head
+
+Tasks:
+1)full feature_upgrade - download, place in a folder, on restart, check_file_present_in_a_folder, move to working, delete existing, extract the current one,.
+2)minimal file_updates
+
