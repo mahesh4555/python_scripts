@@ -1,0 +1,23 @@
+install pyqt5
+install pyqt5-tools
+Go to python3 dir -> pyqt5designer.exe and double click to run.
+
+After designing a window, save it as win.ui 
+convert win.ui to win.py using "pyuic5 -x file.ui -o file.py" command
+
+If we use file_rc(used in stylesheets for inserting images in QT designer),
+inorder to use it in python code,
+convert to py using "pyrcc5 file.qrc -o file_rc.py"
+
+
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+from first_1 import Ui_OtherWindow
+
+class Ui_MainWindow(object):
+    def openWindow(self):
+	    self.window = QtWidgets.QMainWindow()
+		self.ui = Ui_OtherWindow()
+		self.ui.setupUi(self.window)
+		MainWindow.hide()
+		self.window.show()
