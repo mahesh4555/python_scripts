@@ -402,7 +402,4 @@ rsync -avu --delete "/home/user/A/" "/home/user/B"
     --delete delete the files in target folder that do not exist in the source
 '''
 
-Tasks:
-1)full feature_upgrade - download, place in a folder, on restart, check_file_present_in_a_folder, move to working, delete existing, extract the current one,.
-2)minimal file_updates
 
