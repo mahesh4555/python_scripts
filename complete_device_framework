@@ -399,6 +399,44 @@ https://stackoverflow.com/questions/20162176/centos-linux-setting-logrotate-to-m
 
 45. ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head
 
+46. """""""""""""" f.endswith(".gif")""""""""""""""
+      for root, dirs, files in os.walk(curr_dir):
+            for f in files:
+                if f.endswith(".gif") or f.endswith(".jpg"):
+                    img_path = os.path.join(root, f)
+                    print(img_path)
+                    self.imageList.append(img_path)
+
+47. logrotate 
+   
+    weekly - means that the tool will attempt to rotate the logs on a weekly basis. Other possible values are daily and monthly.
+    rotate 3 - indicates that only 3 rotated logs should be kept. Thus, the oldest file will be removed on the fourth subsequent run.
+    size=10M - sets the minimum size for the rotation to take place to 10M. In other words, each log will not be rotated until it reaches 10MB.
+    compress and delaycompress - are used to tell that all rotated logs, with the exception of the most recent one, should be compressed.
+    dateext - rotated file will be kept as with file_name_with_date
+
+refer: https://www.techrepublic.com/article/manage-linux-log-files-with-logrotate/
+
+
+**************"Run logrotate as a cronjob"**************
+Run logrotate as a cronjob to ensures that logs will be rotated as regularly as configured. Logs will only be rotated when logrotate runs, regardless of configuration. For example, if you configure logrotate to rotate logs every day, but logrotate only runs every week, the logs will only be rotated every week.
+
+For most daemon processes, logs should be rotated by the root user. In most cases, logrotate is invoked from a script in the /etc/cron.daily/ directory. If one does not exist, create a script that resembles the following in the /etc/cron.daily/ folder:
+
+48. to delete all contents in a dir - rm -r /path/*
+
+49. To synchronze 2 folders in linux, use rsync
+rsync -avu --delete "/home/mieupro/folderA/" "/home/mieupro/folderB/" 
+
+'''
+rsync -avu --delete "/home/user/A/" "/home/user/B"
+
+    -a Do the sync preserving all filesystem attributes
+    -v run verbosely
+    -u only copy files with a newer modification time (or size difference if the times are equal)
+    --delete delete the files in target folder that do not exist in the source
+'''
+
 Tasks:
 1)full feature_upgrade - download, place in a folder, on restart, check_file_present_in_a_folder, move to working, delete existing, extract the current one,.
 2)minimal file_updates
