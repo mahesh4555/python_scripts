@@ -1,39 +1,4 @@
-Work:
 
-1. Pack all the python scripts in a single folder(GUI.py, diagnostics.py,script.py) and make it to start as a daemon
-and should be able to stop and start any script at anytime
-
-2. Run a script that should listen for feature updates and config updates
-Eg.,[commands]
-	cmd1 = "ls"
-	cmd2 = "who"
- *Change the parameter of cmd1
- *Add a new command 'cmd3'
- *Remove a command
- *Update the existing script, e.g. GUI.py to new GUI_1.py
- 
-3. GUI_pgm and diagnosticspgm will have both feature update and config update
-while NTP pgm will have only config update.
- 
-4.Whenever new config change is received for a program(module),
-stop the corresponding module, update the config or feature change
-and then restart it with a new script, no as daemon.
-
-5. Have as many switch cases for each feature update handling, config parameter update, new parameter addition,etc
- 
-6. The information sent should be as small as possible.
-
-7. Sometimes it necessary to update the script.py itself
-
-8. Encryption should be done on everything
-
-9. Feature update.py and config update.py should be running
-
-Feature update.py hadle new feature updates(GUI.py, diag.py update the files) and config update.py 
-
-Config update handles config value changes for GUI_config values, diag_config values, etc.
-
-Both have multiple switch cases to show
 
 
 https://www.instructables.com/id/Raspberry-Pi-Launch-Python-script-on-startup/
