@@ -111,3 +111,41 @@ logging.critical("Device config File not found", extra={'module_name': 'GUI'})
 {'time':'2020-05-05 16:56:19,603', 'level': 'WARNING','module_name': 'SERVER_COMM', 'message': 'Server communication response sent, but not updates'}
 {'time':'2020-05-05 16:56:19,603', 'level': 'CRITICAL','module_name': 'GUI', 'message': 'Device config File not found'}
 
+#CODE7
+import logging
+logger=logging.getLogger()
+#need to setlevel, else it captures only level greater than
+logger.setLevel(logging.DEBUG)
+
+file_handler=logging.FileHandler('lavazza.log')
+file_formatter=logging.Formatter(
+    "{'time':'%(asctime)s', 'level': '%(levelname)s','module_name': '%(module_name)s', 'message': '%(message)s'}")
+
+file_handler.setFormatter(file_formatter)
+logger.addHandler(file_handler)
+
+logging.info("Provision completed", extra={'module_name': 'GUI'})
+logging.warning("Diagnostics collection incomplete", extra={'module_name': 'DIAGNOSTICS'})
+logging.error("Keep alive msg not sending", extra={'module_name': 'KEEP_ALIVE'})
+logging.warning("Server communication response sent, but not updates", extra={'module_name': 'SERVER_COMM'})
+logging.critical("Device config File not found", extra={'module_name': 'GUI'})
+
+
+def a():
+    try:
+        a = 1 / 0
+    except:
+        logging.exception("Exception in a:1/0",extra={'module_name': 'GUI'})
+a()
+
+#OUTPUT7
+{'time':'2020-05-05 17:25:08,340', 'level': 'INFO','module_name': 'GUI', 'message': 'Provision completed'}
+{'time':'2020-05-05 17:25:08,340', 'level': 'WARNING','module_name': 'DIAGNOSTICS', 'message': 'Diagnostics collection incomplete'}
+{'time':'2020-05-05 17:25:08,340', 'level': 'ERROR','module_name': 'KEEP_ALIVE', 'message': 'Keep alive msg not sending'}
+{'time':'2020-05-05 17:25:08,340', 'level': 'WARNING','module_name': 'SERVER_COMM', 'message': 'Server communication response sent, but not updates'}
+{'time':'2020-05-05 17:25:08,340', 'level': 'CRITICAL','module_name': 'GUI', 'message': 'Device config File not found'}
+{'time':'2020-05-05 17:25:08,340', 'level': 'ERROR','module_name': 'GUI', 'message': 'Exception in a:1/0'}
+Traceback (most recent call last):
+  File "/home/pi/lavazza/src/source_code/features/DIAGNOSTICS/logg10.py", line 22, in a
+    a = 1 / 0
+ZeroDivisionError: division by zero
