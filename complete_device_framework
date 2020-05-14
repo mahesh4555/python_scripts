@@ -402,4 +402,15 @@ rsync -avu --delete "/home/user/A/" "/home/user/B"
     --delete delete the files in target folder that do not exist in the source
 '''
 
+50. CPU and Memory Usage of Systemd services
+
+Sometimes it might help adding these 2 options in your .service file under [Service] block
+CPUAccounting = yes
+MemoryAccounting = yes
+
+If u need the above for all the services, then
+in /etc/systemd/system.conf, add
+DefaultMemoryAccounting=yes
+DefaultCPUAccounting=yes
+and then systemctl daemon-reexec
 
