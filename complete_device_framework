@@ -414,3 +414,5 @@ DefaultMemoryAccounting=yes
 DefaultCPUAccounting=yes
 and then systemctl daemon-reexec
 
+51. Watch  CPU and Memory Usage of Systemd services
+watch systemctl status name.service
