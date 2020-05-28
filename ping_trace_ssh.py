@@ -35,15 +35,15 @@ def ssh_connect(IP, UserName):
         ssh.close()
 
     except paramiko.AuthenticationException:
-        status = "Authentication failed, please verify your credentials"
+        print("Authentication failed, please verify your credentials")
     except paramiko.SSHException as sshException:
-        status = "Could not establish SSH connection: " + str(sshException)
+        print("Could not establish SSH connection: " + str(sshException))
     except socket.timeout:
-        status = "Connection timed out"
+        print("Connection timed out")
     except Exception as exception:
-        status = "Exception in connecting because " + str(exception)
+        print("Exception in connecting because " + str(exception))
     else:
-        status = "success"
+        print("success")
 
 
 
@@ -79,52 +79,3 @@ for command in commands:
 
 
 
-
-"""
-import paramiko
-
-
-# Initializing required variables
-pkey = '~/.ssh/id_rsa'
-
-# Paramiko.SSHClient can be used to make connections to the remote ssh server
-ssh = paramiko.SSHClient()
-privatekeyfile = os.path.expanduser(pkey)
-mykey = paramiko.RSAKey.from_private_key_file(privatekeyfile)
-
-
-def ssh_connect(IP, UserName, os):
-    try:
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(IP, username=UserName, pkey=mykey, timeout=5, allow_agent=True, look_for_keys=True)
-        exec_commands(ssh, IP, UserName)
-        ssh.close()
-
-    except paramiko.AuthenticationException:
-        status = "Authentication failed, please verify your credentials"
-        conn_status_list.extend([IP, UserName, status])
-    except paramiko.SSHException as sshException:
-        status = "Could not establish SSH connection: " + str(sshException)
-        conn_status_list.extend([IP, UserName, status])
-    except socket.timeout:
-        status = "Connection timed out"
-        conn_status_list.extend([IP, UserName, status])
-    except Exception as exception:
-        status = "Exception in connecting because " + str(exception)
-        conn_status_list.extend([IP, UserName, status])
-    else:
-        conn_status_list.extend([IP, UserName, 'success'])
-
-    return conn_status_list
-    
-    
-def exec_commands():
-    command_0 = "who"
-    _, stdout, stderr = ssh.exec_command(command_0)
-    if stdout:
-        ssh_cmd_output = stdout.read()
-    elif stderr:
-        ssh_cmd_output = stderr.read()
-
-
-"""
