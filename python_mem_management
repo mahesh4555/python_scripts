@@ -1,0 +1,133 @@
+The PyObject, the grand-daddy of all objects in Python, contains only two things:
+
+    ob_refcnt: reference count
+    ob_type: pointer to another type
+
+
+You can use sys.getrefcount(numbers), but keep in mind that passing in the object to getrefcount() increases the reference count by 1.
+
+In any case, if the object is still required to hang around in your code, its reference count is greater than 0. Once it drops to 0, the object has a specific deallocation function that is called which “frees” the memory so that other objects can use it.
+
+But what does it mean to “free” the memory, and how do other objects use it? Let’s jump right into CPython’s memory management.
+
+
+ The Python memory manager manages Python’s memory allocations. There’s a private heap that contains all Python objects and data structures. The Python memory manager manages the Python heap on demand.
+The Python memory manager has object-specific allocators to allocate memory distinctly for specific objects such as int, string, etc… Below that, the raw memory allocator interacts with the memory manager of the operating system to ensure that there’s space on the private heap.
+
+
+Methods and variables are created in Stack memory. A stack frame is created whenever methods and variables are created. These frames are destroyed automatically whenever methods are returned.
+
+The Python memory manager manages chunks of memory called “Blocks”. A collection of blocks of the same size makes up the “Pool”. Pools are created on Arenas, chunks of 256kB memory allocated on heap=64 pools
+
+Objects and instance variables are created in Heap memory. As soon as the variables and functions are returned, dead objects will be garbage collected.
+
+It is important to note that the Python memory manager doesn’t necessarily release the memory back to the Operating System, instead memory is returned back to the python interpreter. Python has a small objects allocator that keeps memory allocated for further use. In long-running processes, you may have an incremental reserve of unused memory.
+
+
+
+Don’t do this:
+
+mymsg=’line1\n’
+mymsg+=’line2\n’
+
+Better choice:
+
+mymsg=[‘line1’,’line2']
+‘\n’.join(mymsg)
+
+Don’t use the + operator for concatenation if you can avoid it. Because strings are immutable, every time you add an element to a string, Python creates a new string and a new address. This means that new memory needs to be allocated each time the string is altered
+
+
+Don’t do this:
+
+msg=’hello’+mymsg+’world’
+
+Better choice:
+
+msg=’hello %s world’ % mymsg
+
+
+Put evaluations outside the loop
+
+If you are iterating through data, you can use the cached version of the regex.
+
+match_regex=re.compile(“foo|bar”)for i in big_it:
+     m = match_regex.search(i)
+         ….
+
+Assign a function to a local variable
+
+Python accesses local variables much more efficiently than global variables. Assign functions to local variables then use them.
+
+myLocalFunc=myObj.func
+for i in range(n):
+    myLocalFunc(i)
+
+
+Don’t do this:
+
+mylist=[]
+for myword in oldlist:
+      mylist.append(myword.upper())
+
+Better choice:
+
+mylist=map(str.lower, oldlist)
+
+Better choice for creating a dataset with keyword arguments than loops:
+
+mycounter = Counter (a = 1, b = 2, c = 3, d = 5, e = 6, f = 7, g = 8)
+for i in mycounter.elements():
+
+Getting rid of unwanted loops by using itertools
+
+itertools saves you a lot of time on loops. It also gets rid of the complexity of the code.
+
+Don’t do this:
+
+mylist=[]
+for shape in [True, False]:
+     for weight in (1, 5):
+          firstlist=firstlist+function(shape, weight)
+
+Better choice:
+
+from itertools import product, chainlist(chain.from_iterable(function(shape, weight) for weight, shape in product([True, False], range(1, 5))))
+
+
+
+A system using virtual memory uses a section of the hard drive to emulate RAM. With virtual memory, a system can load larger programs or multiple programs running at the same time, allowing each one to operate as if it has infinite memory and without having to purchase more RAM.
+
+Increasing the swapfile has two adverse effects (that I know of):
+
+- You want to minimize writes to the SD card to avoid corruption. Using a swapfile this large will allow the operating system to (potentially) run rampart writes to your SD card. Which is bad for a flash-based storage as it's more prone to corrupting your SD card/filesystem.
+
+- All these extra writes to the SD card will cause your SD card's life to decrease. SD cards have a limited number of writes before the flash-based storage just doesn't hold the ones and zeros anymore.
+
+neither the micro sd card nor the usb stick were designed to be computer hard drives.
+but the raspberry pi is designed that way so as users we have little option.
+yes i know add an external mechanical hard drive or an external ssd drive.
+there are problems there too.
+having just increased the size of my swap file from 100 MB to 1024 Mb
+now i read this forum.
+oh well - all good fun.
+
+
+
+
+
+Memory leak tools:
+https://tech.buzzfeed.com/finding-and-fixing-memory-leaks-in-python-413ce4266e7d
+tracemalloc
+
+
+https://dzone.com/articles/diagnosing-memory-leaks-python
+Explanation
+Long-running Python jobs that consume a lot of memory while running may not return that memory to the operating system until the process actually terminates, even if everything is garbage-collected properly. That was news to me, but it’s true. What this means is that processes that do need to use a lot of memory will exhibit a “high water” behavior, where they remain forever at the level of memory u sage that they required at their peak.
+
+Note: this behavior may be Linux-specific; there are anecdotal reports that Python on Windows does not have this problem.
+
+
+
+memory_profiler
+pympler _ tracker
