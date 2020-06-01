@@ -22,3 +22,8 @@ def fib(n):
 cache in linux
 sudo lshw -C memory
 
+
+
+actually now that I think of the whole hierarchy of L1 cache > L2 cache > RAM > virtual memory. 
+It seems basically memory swapping only. The data that CPU needs immediately, at this instant, stays closest to CPU,
+and closer the memory is to CPU more expensive it is. Hence the Heirarchy
