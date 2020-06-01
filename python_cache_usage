@@ -1,0 +1,24 @@
+Sometimes you shouldn't use a cache
+
+In general a cache can only be used when:
+
+    The data doesn't change for the lifetime of the cache.
+    The function will always return the same value for the same arguments (so time and random don't make sense to cache).
+    The function has no side effects. If the cache is hit, then the function never gets called, so make sure you're not changing any state in it.
+    The function doesn't return distinct mutable objects. For example, functions that return lists are a bad idea to cache since the reference to the list will be cached, not the list contents.
+
+
+import functools
+
+@functools.lru_cache(maxsize=128)
+def fib(n):
+  if n < 2:
+    return 1
+  return fib(n-1) + fib(n-2)
+
+
+
+
+cache in linux
+sudo lshw -C memory
+
