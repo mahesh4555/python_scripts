@@ -1,0 +1,28 @@
+
+# mount -o remount,exec /dev/MyFlashDrive
+
+sudo mount -o exec /path/to/mount_point
+
+
+You haven't done anything wrong. The ext4fs file system supports normal Linux ownership and permissions. You just have to change those so you can access it. For example if you want the "pi" user to be the owner you can run sudo chown -R pi /media/pi/msata to change the ownership.
+
+
+I think you will find that once mounted normally, without the -o option, it will be accessible by pi, because you changed the ownership of it.
+
+Anyway, you can make a soft link to /media/pi/msata, (if that is what it gets mounted as), in your home directory to make it easier to use.
+
+Code: Select all
+
+ln -s /media/pi/msata mydrive
+
+Then you just access it by using mydrive.
+
+Code: Select all
+
+ls mydrive
+
+will then show all the files on /media/pi/msata.
+
+
+https://medium.com/@aallan/adding-an-external-disk-to-a-raspberry-pi-and-sharing-it-over-the-network-5b321efce86a
+
