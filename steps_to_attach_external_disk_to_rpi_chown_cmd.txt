@@ -23,6 +23,19 @@ ls mydrive
 
 will then show all the files on /media/pi/msata.
 
+That depends. The owner on the disk is now set to userid 1000, which is the ID of "pi" on Raspbian. If userid 1000 was "fred" on the other computer it would show up as being owned by "fred". 
+
 
 https://medium.com/@aallan/adding-an-external-disk-to-a-raspberry-pi-and-sharing-it-over-the-network-5b321efce86a
+
+https://turbofuture.com/computers/Permanently-Mounting-a-USB-Harddrive-to-your-Raspberry-Pi
+
+
+Test cases:
+
+1. change the ownership of external sd card to root user
+2. Place the codebase and test the systemd service runs from ext sd card
+3. ensure logrotate works 
+4. check update feature works. download directly to the sd card
+
 
