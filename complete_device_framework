@@ -416,3 +416,9 @@ and then systemctl daemon-reexec
 
 51. Watch  CPU and Memory Usage of Systemd services
 watch systemctl status name.service
+
+
+52. journalctl -u diag.service
+when it shows older logs(say 2days ago)
+To come to latest logs, press Shift + G
+link : https://www.linode.com/docs/quick-answers/linux/how-to-use-journalctl/
