@@ -10,6 +10,7 @@ install pyqt5
 install pyqt5-tools
 
 Go to python3 dir -> pyqt5designer.exe and double click to run.
+(In my system,in terminal, C:\Programs_code>pyqt5designer.exe, click enter)
 
 
 
