@@ -426,3 +426,8 @@ link : https://www.linode.com/docs/quick-answers/linux/how-to-use-journalctl/
 53. .dll files in windows is similar to .so files in linux
 Link: https://stackoverflow.com/questions/124549/what-exactly-are-dll-files-and-how-do-they-work
 
+A .a file is a static library, while a .so file is a shared object (dynamic) library similar to a DLL on Windows. 
+There's some detailed information about the differences between the two on this page.
+
+Link: http://www.yolinux.com/TUTORIALS/LibraryArchives-StaticAndDynamic.html
+
