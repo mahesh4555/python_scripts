@@ -422,3 +422,7 @@ watch systemctl status name.service
 when it shows older logs(say 2days ago)
 To come to latest logs, press Shift + G
 link : https://www.linode.com/docs/quick-answers/linux/how-to-use-journalctl/
+
+53. .dll files in windows is similar to .so files in linux
+Link: https://stackoverflow.com/questions/124549/what-exactly-are-dll-files-and-how-do-they-work
+
