@@ -149,3 +149,27 @@ Traceback (most recent call last):
   File "/home/pi/lavazza/src/source_code/features/DIAGNOSTICS/logg10.py", line 22, in a
     a = 1 / 0
 ZeroDivisionError: division by zero
+
+    
+    
+#CODE9
+#Using log_level as variable
+
+
+import logging
+
+#**********************
+
+log_level = logging.INFO
+log_format = '%(asctime)s - DIAGNSOTICS - %(levelname)s - %(message)s'
+
+#***********************
+print(type(log_level))
+print(log_level)
+logging.basicConfig(level=log_level, format=log_format)
+
+logging.debug("This is a debug message")
+logging.info("This is an informational message")
+logging.warning("Careful! Something does not look right")
+logging.error("You have encountered an error")
+logging.critical("You are in trouble")
