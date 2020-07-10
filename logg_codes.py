@@ -173,3 +173,10 @@ logging.info("This is an informational message")
 logging.warning("Careful! Something does not look right")
 logging.error("You have encountered an error")
 logging.critical("You are in trouble")
+
+#OUTPUT9
+2020-07-10 20:30:39,757 - DIAGNSOTICS - INFO - This is an informational message
+2020-07-10 20:30:39,757 - DIAGNSOTICS - WARNING - Careful! Something does not look right
+2020-07-10 20:30:39,757 - DIAGNSOTICS - ERROR - You have encountered an error
+2020-07-10 20:30:39,757 - DIAGNSOTICS - CRITICAL - You are in trouble
+
