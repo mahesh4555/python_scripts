@@ -402,7 +402,8 @@ rsync -avu --delete "/home/user/A/" "/home/user/B"
     --delete delete the files in target folder that do not exist in the source
 '''
 
-50. CPU and Memory Usage of Systemd services
+50. CPU and Memory Usage of 
+services
 
 Sometimes it might help adding these 2 options in your .service file under [Service] block
 CPUAccounting = yes
@@ -454,5 +455,31 @@ Operator
     + : Adds the attribute to the existing attribute of the files.
     – : Removes the attribute to the existing attribute of the files.
     = : Keep the existing attributes that the files have.
+
+
+55. systemd service file with restart limit  on repeated failure
+
+[Unit]
+Description=My service
+OnFailure=tcmc.service
+StartLimitInterval=40
+StartLimitBurst=4
+
+[Service]
+Type=simple
+WorkingDirectory=/home/mahesh/TestCodes/
+ExecStart=/usr/bin/python3  test_pgm.py
+Restart=on-failure
+RestartSec=3
+KillMode=process
+#StartLimitBurst=1
+[Install]
+WantedBy=multi-user.target
+
+Note:
+StartLimitInterval > (RestartSec * StartLimitBurst) #if this is wrongly specified, service may restart again multiple times  as systemd service is permitted
+StartLimitBurst - no. of times tries to restart on failure
+StartLimitInterval - After this interval, no restart should happen
+
 
 
