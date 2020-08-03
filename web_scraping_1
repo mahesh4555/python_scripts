@@ -1,0 +1,86 @@
+import requests
+from bs4 import BeautifulSoup
+import requests
+import smtplib
+from time import sleep
+#***********************************
+fromaddr = 'xxxx@gmail.com'
+msg = '2222Why,Oh why!'
+username = 'mxxx@gmail.com'
+password = 'yyyyyy
+list = ['msxxsxjsa@gmail.com']
+#***********************************
+
+
+
+
+URL = 'https://xyz.com'
+
+headers = {'user':"gituus", "mail":"xxxxxxxxx@gmail.com",
+           "purpose_of_scraping":"xxxxxxxxxxxxxxue"}
+
+
+def send_mail(msg):
+    for i in range(len(list)):
+        server = smtplib.SMTP('smtp.gmail.com:587')
+
+        server.starttls()
+        server.login(username, password)
+        server.sendmail(fromaddr, list[i], msg)
+        server.quit()
+
+
+
+def scrap_eth_value():
+
+
+    response = requests.get(URL, headers=headers)
+    src = response.content
+
+    soup = BeautifulSoup(src, 'lxml')
+    #print(soup.prettify())
+
+
+    ether_div = soup.find('div', class_="col-xs-12 aktien-big-font no-padding")
+    # print(ether_div)
+
+    list=[]
+
+    i=1
+    for div in ether_div:
+        if 1:
+            # print(i)
+            # print(div)
+            ether_big_string =str(div)
+            # print(ether_big_string)
+            ether_big_string = ether_big_string.split(" ")
+            #print(ether_big_string)
+            for param in ether_big_string:
+                if "data-jsvalue" in param:
+                    #print(param)
+                    param=param.split(">")
+                    param_2= param[1].split('<')
+
+                    etherium_value = param_2[0]
+                    list.append(param_2[0])
+
+
+
+        i+=1
+
+    print(list)
+    ether_values = "-".join(list)
+    print(ether_values)
+    return ether_values
+
+
+if __name__ == '__main__':
+    count=0
+    while True:
+        ether_values = scrap_eth_value()
+        send_mail(ether_values)
+        count+=1
+        print("Count:",count)
+
+        sleep(10)
+
