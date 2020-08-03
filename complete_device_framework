@@ -481,5 +481,8 @@ StartLimitInterval > (RestartSec * StartLimitBurst) #if this is wrongly specifie
 StartLimitBurst - no. of times tries to restart on failure
 StartLimitInterval - After this interval, no restart should happen
 
+56. To find and replace all occurrences of 'apple' with 'orange' in all files in subdirs of a dir 
+
+    CMD : find ./home/pi/DOcuments -type f -exec sed -i -e 's/apple/orange/g' {} \;
 
 
