@@ -3,6 +3,7 @@ Motivational quotes display in rPi
 configs:
 time_interval
 image_names_list
+image_names_list_length
 curent_image_index
 folder_modified_time
 
