@@ -1,0 +1,26 @@
+Motivational quotes display in rPi
+
+configs:
+time_interval
+image_names_list
+curent_image_index
+folder_modified_time
+
+
+Starts
+If image_names_list is empty, get all filenames and store it in list, store folder modified time
+Read first file from list and update current_index, display the image, sleeps,
+wakes up, check for folder_modified_time(from folder),
+ if changed, get all filenames, check which is not in list and append those images_file_name the in list 
+ or get file and check 
+Read second image and update current_index, display the image, sleeps,
+
+
+Code:
+a = ['file1.py','file2.py','file3.py','file4.py']  #image_names_list
+b = ['file1.py','file3.py','file4.py', 'file5.py']  #Latest_image_names_list
+
+diff = list(set(a) ^ set(b))  #['file5.py', 'file2.py']
+
+Check files in diff, if present in Latest_image_names_list, add it to the image_names_list, 
+                     if not found, delete it from image_names_list.
