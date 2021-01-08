@@ -25,3 +25,19 @@ diff = list(set(a) ^ set(b))  #['file5.py', 'file2.py']
 
 Check files in diff, if present in Latest_image_names_list, add it to the image_names_list, 
                      if not found, delete it from image_names_list.
+
+
+Alternate way:
+set A = {10, 20, 30, 40, 80}
+set B = {100, 30, 80, 40, 60}
+
+
+set A - set B = {10, 20}  #delete files from the list
+set B - set A = {100, 60}  #add files to the lsit
+
+Explanation: A - B is equal to the elements present in A but not in B
+             B - A is equal to the elements present in B but not in A
+			 
+
+			 
+		
